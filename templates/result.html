@@ -3,34 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solution - N-Queens Solver</title>
+    <title>N-Queens Solutions</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>N-Queens Solver - Solution</h1>
-            <p>Here is the solution to the N-Queens problem!</p>
+            <h1>N-Queens Solver</h1>
+            {% if error %}
+                <p class="error">{{ error }}</p>
+            {% else %}
+                <p>Found {{ count }} solution(s) for N = {{ n }}:</p>
+            {% endif %}
         </div>
 
-        <div id="message" class="message">
-            <!-- Success or error message will be inserted here -->
+        {% if not error %}
+        <div id="visualizer-section">
+            <h2>Real-Time Visualization</h2>
+            <div class="controls">
+                <button id="start-pause-btn" class="btn">Start Visualization</button>
+                <label for="speed">Speed:</label>
+                <input type="range" id="speed" min="500" max="3000" step="100" value="1500">
+                <select id="theme-selector" class="btn">
+                    <option value="classic">Classic</option>
+                    <option value="modern">Modern</option>
+                    <option value="dark">Dark</option>
+                    <option value="light">Light</option>
+                </select>
+            </div>
+            <div id="chessboard-container">
+                <table id="chessboard" class="chessboard classic">
+                    <!-- Dynamic Chessboard -->
+                </table>
+            </div>
+            <p id="solution-index"></p>
         </div>
 
-        <div id="board" class="board">
-            <!-- The chessboard solution will be rendered here -->
+        <div class="solutions">
+            {% for solution in solutions %}
+            <div class="solution">
+                <h3>Solution {{ loop.index }}:</h3>
+                <table class="chessboard {{ theme }}">
+                    {% for row in solution %}
+                    <tr>
+                        {% for cell in row %}
+                        <td class="{{ 'queen' if cell == 1 else '' }}"></td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            {% endfor %}
         </div>
+        {% endif %}
 
-        <div class="actions">
-            <a href="/" class="btn">Back to Home</a>
-        </div>
+        <a href="/" class="btn">Solve Another</a>
     </div>
 
-    <footer>
-        <p>Developed with ❤️ by [Ashish]</p>
-    </footer>
+    <script>
+        const solutions = {{ solutions|tojson }};
+        const n = {{ n }};
+        let index = 0;
+        let interval;
+        let isRunning = false;
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+        const chessboardContainer = document.getElementById('chessboard');
+        const solutionIndex = document.getElementById('solution-index');
+        const startPauseBtn = document.getElementById('start-pause-btn');
+        const speedControl = document.getElementById('speed');
+        const themeSelector = document.getElementById('theme-selector');
+
+        // Render a single solution
+        function renderSolution(solution) {
+            chessboardContainer.innerHTML = '';
+            solution.forEach(row => {
+                const tr = document.createElement('tr');
+                row.forEach(cell => {
+                    const td = document.createElement('td');
+                    if (cell === 1) td.classList.add('queen');
+                    tr.appendChild(td);
+                });
+                chessboardContainer.appendChild(tr);
+            });
+        }
+
+        // Update visualizer
+        function updateVisualizer() {
+            renderSolution(solutions[index]);
+            solutionIndex.textContent = `Showing Solution ${index + 1} of ${solutions.length}`;
+            index = (index + 1) % solutions.length;
+        }
+
+        // Start or pause the visualization
+        startPauseBtn.addEventListener('click', () => {
+            if (isRunning) {
+                clearInterval(interval);
+                startPauseBtn.textContent = 'Start Visualization';
+            } else {
+                updateVisualizer();
+                interval = setInterval(updateVisualizer, parseInt(speedControl.value));
+                startPauseBtn.textContent = 'Pause Visualization';
+            }
+            isRunning = !isRunning;
+        });
+
+        // Adjust visualization speed
+        speedControl.addEventListener('input', () => {
+            if (isRunning) {
+                clearInterval(interval);
+                interval = setInterval(updateVisualizer, parseInt(speedControl.value));
+            }
+        });
+
+        // Change chessboard theme
+        themeSelector.addEventListener('change', (event) => {
+            const theme = event.target.value;
+            chessboardContainer.className = `chessboard ${theme}`;
+            const allSolutions = document.querySelectorAll('.chessboard');
+            allSolutions.forEach(chessboard => chessboard.className = `chessboard ${theme}`);
+        });
+
+        // Initialize with the first solution and the default theme
+        renderSolution(solutions[index]);
+    </script>
 </body>
 </html>

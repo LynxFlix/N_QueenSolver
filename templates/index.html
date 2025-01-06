@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N-Queens Solver</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        body {
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #6c5ce7;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        input[type="number"] {
+            padding: 10px;
+            width: 220px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            outline: none;
+            transition: all 0.3s ease-in-out;
+        }
+
+        input[type="number"]:focus {
+            border-color: #6c5ce7;
+            transform: scale(1.05);
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            color: #fff;
+            background-color: #6c5ce7;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #a29bfe;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 1rem;
+            color: #333;
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        footer p {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #6c5ce7;
+        }
+
+        .particles-js {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+
+        .form input, .form button {
+            transition: transform 0.3s ease;
+        }
+
+        .form input:focus, .form button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            input[type="number"] {
+                width: 180px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            input[type="number"] {
+                width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles Background -->
+    <div id="particles-js" class="particles-js"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>N-Queens Solver</h1>
+            <p>Visualize solutions to the classic N-Queens problem!</p>
+        </div>
+
+        <form id="sizeForm" class="form">
+            <label for="size">Enter Board Size (N):</label>
+            <input type="number" id="size" name="size" min="4" placeholder="Enter N" required>
+            <button type="submit">Solve</button>
+        </form>
+
+        <div id="message" class="message"></div>
+        <div id="board" class="board"></div>
+    </div>
+
+    <footer>
+        <p>Developed with ❤️ by [Ashish]</p>
+    </footer>
+
+    <!-- Particles.js Script -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {
+                    "value": 60,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ffffff"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    }
+                },
+                "opacity": {
+                    "value": 0.3,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ffffff",
+                    "opacity": 0.3,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 3,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false
+                    }
+                }
+            }
+        });
+
+        document.getElementById('sizeForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const size = document.getElementById('size').value;
+
+            fetch('/solve', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `size=${size}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                const board = document.getElementById('board');
+                board.innerHTML = '';
+                const message = document.getElementById('message');
+                message.innerHTML = '';
+                if (data.solution) {
+                    displaySolution(data.solution);
+                } else {
+                    message.textContent = data.error;
+                    message.classList.add('error');
+                }
+            });
+        });
+
+        function displaySolution(solution) {
+            const size = solution.length;
+            const board = document.getElementById('board');
+            const table = document.createElement('table');
+            table.classList.add('chessboard');
+
+            for (let i = 0; i < size; i++) {
+                const row = document.createElement('tr');
+                for (let j = 0; j < size; j++) {
+                    const cell = document.createElement('td');
+                    if (solution[i][j] === 1) {
+                        cell.classList.add('queen');
+                    }
+                    row.appendChild(cell);
+                }
+                table.appendChild(row);
+            }
+
+            board.appendChild(table);
+        }
+    </script>
+</body>
+</html>

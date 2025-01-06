@@ -17,6 +17,7 @@ This project provides a solution to the N-Queens problem using a backtracking al
 - **Frontend**: HTML, CSS, JavaScript
 - **Algorithm**: Backtracking
 
+
 ## Installation
 
 To run this project locally, follow these steps:
@@ -82,6 +83,16 @@ To run this project locally, follow these steps:
     - If the input is not a valid integer, an error message will be displayed.
     - If `N` is less than 4, it will notify the user that there are no valid solutions for smaller values of `N`.
 
+## Example
+
+For `N = 4`, the two solutions would be displayed as:
+
+
+and
+
+
+For `N = 8`, the page will display 92 solutions, each formatted as a chessboard.
+
 ## Future Enhancements
 
 - **Performance Optimization**: As the value of `N` increases, the number of solutions increases exponentially. Caching solutions or limiting the number of displayed solutions can improve performance.
@@ -103,4 +114,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - This project was inspired by the classic N-Queens problem, which is commonly used to teach backtracking algorithms in computer science.
 - Thanks to Flask documentation and various online resources for help with web development and problem-solving strategies.
+
 
